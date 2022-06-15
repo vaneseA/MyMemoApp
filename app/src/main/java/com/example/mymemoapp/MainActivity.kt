@@ -1,28 +1,35 @@
 package com.example.mymemoapp
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.databinding.DataBindingUtil
 import com.example.mymemoapp.adapters.MemoAdapter
-import kotlinx.android.synthetic.main.activity_main.*
+import com.example.mymemoapp.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : BaseActivity() {
+
+    lateinit var binding : ActivityMainBinding
 
     lateinit var dbHelper: DBHelper
     lateinit var database: SQLiteDatabase
     lateinit var memos: ArrayList<MemoVO>
     lateinit var adapter: MemoAdapter
 
+
+    override fun setupEvents() {
+    }
+    override fun setValues() {
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        setSupportActionBar(toolbar_main)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        setupEvents()
+        setValues()
 
         dbHelper = DBHelper(this, "newdb.db", null, 1)
         database = dbHelper.writableDatabase
