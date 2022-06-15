@@ -1,39 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="4dp"
-    android:layout_margin="16dp">
-
-    <RelativeLayout
-        android:id="@+id/containerView"
+<layout>
+    <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/memo_001">
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Title"
-            android:textSize="14sp"
-            android:textColor="#ff888888"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="8dp"/>
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        android:layout_margin="16dp">
 
-        <TextView
-            android:id="@+id/tvMsg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="this is messagae"
-            android:textColor="#ff333333"
-            android:layout_below="@id/tvTitle"
-            android:textSize="16sp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="16dp"/>
-    </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/containerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/memo_001">
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Title"
+                android:textSize="14sp"
+                android:textColor="#ff888888"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="8dp"/>
 
-</com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:id="@+id/tvMsg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="this is messagae"
+                android:textColor="#ff333333"
+                android:layout_below="@id/tvTitle"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"/>
+        </RelativeLayout>
+
+    </com.google.android.material.card.MaterialCardView></layout>

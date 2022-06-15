@@ -9,13 +9,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import kotlinx.android.synthetic.main.activity_memo.*
+import com.example.mymemoapp.databinding.ActivityMemoBinding
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MemoActivity : AppCompatActivity() {
+class MemoActivity : BaseActivity() {
+
+    lateinit var binding: ActivityMemoBinding
 
     lateinit var dbHelper: DBHelper
     lateinit var database: SQLiteDatabase
@@ -28,7 +30,7 @@ class MemoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_memo)
-        setSupportActionBar(toolbar_memo)
+//        setSupportActionBar(toolbar_memo)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
@@ -46,38 +48,46 @@ class MemoActivity : AppCompatActivity() {
         }
         if (intent.getStringExtra("color") != null) {
             color = intent.getStringExtra("color")!!
-            etMemo.setBackgroundColor(Color.parseColor(color))
+            binding.etMemo.setBackgroundColor(Color.parseColor(color))
         }
         if (intent != null){
             no = intent.getIntExtra("no", 0)
         }
         if (txt != null) {
             txt = txt.replace("||", "\n")
-            etMemo.setText(txt)
+            binding.etMemo.setText(txt)
         }
+    }
+
+    override fun setupEvents() {
+
+    }
+
+    override fun setValues() {
+
     }
 
     @SuppressLint("ResourceAsColor")
     fun clickColor(view: View) {
         when (view.id) {
             R.id.color1 -> {
-                etMemo.setBackgroundColor(Color.parseColor("#ffF1EAAD"))
+                binding.etMemo.setBackgroundColor(Color.parseColor("#ffF1EAAD"))
                 color = "#ffF1EAAD"
             }
             R.id.color2 -> {
-                etMemo.setBackgroundColor(Color.parseColor("#ffE3A8ED"))
+                binding.etMemo.setBackgroundColor(Color.parseColor("#ffE3A8ED"))
                 color = "#ffE3A8ED"
             }
             R.id.color3 -> {
-                etMemo.setBackgroundColor(Color.parseColor("#ffA9D2F3"))
+                binding.etMemo.setBackgroundColor(Color.parseColor("#ffA9D2F3"))
                 color = "#ffA9D2F3"
             }
             R.id.color4 -> {
                 color = "#ffA8EFE8"
-                etMemo.setBackgroundColor(Color.parseColor(color))
+                binding.etMemo.setBackgroundColor(Color.parseColor(color))
             }
             R.id.color5 -> {
-                etMemo.setBackgroundColor(Color.parseColor("#ffF3A6C0"))
+                binding.etMemo.setBackgroundColor(Color.parseColor("#ffF3A6C0"))
                 color = "#ffF3A6C0"
             }
         }
@@ -92,7 +102,7 @@ class MemoActivity : AppCompatActivity() {
 
     @SuppressLint("SimpleDateFormat")
     fun clickSave(view: View) {
-        var txt :String = etMemo.text.toString();
+        var txt :String = binding.etMemo.text.toString();
         var re = "\n".toRegex()
         txt = txt.replace(re,"||" )
         var query : String = if (no == 0) {
