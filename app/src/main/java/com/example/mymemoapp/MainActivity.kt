@@ -36,18 +36,18 @@ class MainActivity : BaseActivity() {
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.option_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.option_menu, menu)
+//        return super.onCreateOptionsMenu(menu)
+//    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.add) {
-            var intent = Intent(this, MemoActivity::class.java)
-            startActivity(intent)
-        }
-        return super.onOptionsItemSelected(item)
-    }
+//    override fun onOptionsItemSelected(item: Rec): Boolean {
+//        if (item.itemId == R.id.add) {
+//            var intent = Intent(this, MemoActivity::class.java)
+//            startActivity(intent)
+//        }
+//        return super.onOptionsItemSelected(item)
+//    }
 
 //    override fun onResume() {
 //        super.onResume()

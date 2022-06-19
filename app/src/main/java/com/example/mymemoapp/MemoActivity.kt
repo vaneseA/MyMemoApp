@@ -2,6 +2,7 @@ package com.example.mymemoapp
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
+import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
 import android.graphics.drawable.Drawable
@@ -18,7 +19,6 @@ import java.util.*
 class MemoActivity : BaseActivity() {
 
     lateinit var binding: ActivityMemoBinding
-
     lateinit var dbHelper: DBHelper
     lateinit var database: SQLiteDatabase
     var txt: String = ""
@@ -30,9 +30,7 @@ class MemoActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_memo)
-//        setSupportActionBar(toolbar_memo)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+
 
 
 
@@ -60,12 +58,11 @@ class MemoActivity : BaseActivity() {
     }
 
     override fun setupEvents() {
-
+        addBtn.setOnClickListener {
+            val myIntent = Intent(mContext, MemoActivity::class.java)
+            startActivity(myIntent)
     }
 
-    override fun setValues() {
-
-    }
 
     @SuppressLint("ResourceAsColor")
     fun clickColor(view: View) {
@@ -93,7 +90,7 @@ class MemoActivity : BaseActivity() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             onBackPressed()
         }
@@ -117,5 +114,10 @@ class MemoActivity : BaseActivity() {
         }
             database.execSQL(query)
             finish()
+    }
+}
+
+    override fun setValues() {
+        addBtn.visibility = View.VISIBLE
     }
 }

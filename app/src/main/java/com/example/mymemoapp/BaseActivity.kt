@@ -13,6 +13,8 @@ abstract class BaseActivity : AppCompatActivity() {
 
     lateinit var addBtn : ImageView
 
+    lateinit var titleTxt : TextView
+
     val TAG = javaClass.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,9 +43,10 @@ abstract class BaseActivity : AppCompatActivity() {
         myToolbar.setContentInsetsAbsolute(0,0)
 
         addBtn = defaultActionBar.customView.findViewById<ImageView>(R.id.addBtn)
-
+        titleTxt = defaultActionBar.customView.findViewById(R.id.titleTxt)
         addBtn.setOnClickListener {
-            finish()
+            MemoActivity()
+
 //           메모장 새페이지
         }
     }
