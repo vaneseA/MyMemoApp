@@ -1,6 +1,7 @@
 package com.example.mymemoapp
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
@@ -45,7 +46,9 @@ abstract class BaseActivity : AppCompatActivity() {
         addBtn = defaultActionBar.customView.findViewById<ImageView>(R.id.addBtn)
         titleTxt = defaultActionBar.customView.findViewById(R.id.titleTxt)
         addBtn.setOnClickListener {
-            MemoActivity()
+            val myIntent = Intent(mContext,MemoActivity::class.java)
+            startActivity(myIntent)
+
 
 //           메모장 새페이지
         }
