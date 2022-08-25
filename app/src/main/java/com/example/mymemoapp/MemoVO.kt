@@ -1,9 +1,8 @@
 package com.example.mymemoapp
 
-class MemoVO(
-    val no: Int,
-    val txt: String,
-    val time: String,
-    val color: String) {
-
+class MemoVO {
+    var no: Int = 0
+    var txt: String = ""
+    var writeTime: Any = Any()
+    var color: String = ""
 }
