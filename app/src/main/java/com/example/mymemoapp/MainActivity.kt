@@ -44,9 +44,9 @@ class MainActivity : AppCompatActivity() {
         // RecyclerView 에 LayoutManager 설정
         val layoutManager = LinearLayoutManager(this@MainActivity)
         // 리사이클러뷰의 아이템을 역순으로 정렬하게 함
-        layoutManager.reverseLayout = true
+//        layoutManager.reverseLayout = true
         // 리사이클려뷰의 아이템을 쌓는 순서를 끝부터 쌓게 함
-        layoutManager.stackFromEnd = true
+//        layoutManager.stackFromEnd = true
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = MyAdapter()
         // Firebase 에서 Post 데이터를 가져온 후 posts 변수에 저장
@@ -173,8 +173,6 @@ class MainActivity : AppCompatActivity() {
         // 각 행의 포지션에서 그려야할 ViewHolder UI 에 데이터를 적용하는 메소드
         override fun onBindViewHolder(holder: MyViewHodler, position: Int) {
             val post = posts[position]
-//            // 배경 이미지 설정
-//            Picasso.get().load(Color.parse(post.bgUri)).fit().centerCrop().into(holder.imageView)
             // 카드에 글을 세팅
             holder.itemView.contentsText.text = post.message
             // 글이 쓰여진 시간
@@ -214,6 +212,5 @@ class MainActivity : AppCompatActivity() {
             return format.format(Date(targetTime))
         }
     }
-
 
 }
