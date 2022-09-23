@@ -1,6 +1,8 @@
 package com.example.mymemoapp
 
 import android.content.Intent
+import android.graphics.Color
+import android.net.Uri.parse
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,6 +14,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_detail.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.recycler_item.view.*
@@ -19,8 +22,10 @@ import org.joda.time.DateTime
 import org.joda.time.Days
 import org.joda.time.Hours
 import org.joda.time.Minutes
+import java.net.HttpCookie.parse
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.logging.Level.parse
 
 
 class MainActivity : AppCompatActivity() {
@@ -138,7 +143,7 @@ class MainActivity : AppCompatActivity() {
     // RecyclerView 에서 사용하는 View 홀더 클래스
     inner class MyViewHodler(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // 글의 배경 이미지뷰
-//        val imageView: ImageView = itemView.backgrounColorImageView
+        val backgrounColorImageView: ImageView = itemView.backgrounColorImageView
         // 글의 내용 텍스트뷰
         val contentsText: TextView = itemView.contentsText
 
@@ -169,14 +174,15 @@ class MainActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: MyViewHodler, position: Int) {
             val post = posts[position]
 //            // 배경 이미지 설정
-//            Picasso.get().load(Uri.parse(post.bgUri)).fit().centerCrop().into(holder.imageView)
+//            Picasso.get().load(Color.parse(post.bgUri)).fit().centerCrop().into(holder.imageView)
             // 카드에 글을 세팅
-            holder.contentsText.text = post.message
+            holder.itemView.contentsText.text = post.message
             // 글이 쓰여진 시간
-            holder.timeTextView.text = getDiffTimeText(post.writeTime as Long)
+            holder.itemView.timeTextView.text = getDiffTimeText(post.writeTime as Long)
             // 배경색깔
-//            holder.containerView.setBackgroundColor(post.)
-//            holder.layoutBackground.setBackgroundColor(Color.parseColor(post.color))
+            holder.itemView.backgrounColorImageView.setBackgroundColor(Color.parseColor(post.color))
+
+//            holder.backgrounColorImageView.setBackgroundColor(Color.parseColor(post.color))
             // 카드가 클릭되는 경우 DetailActivity 를 실행한다.
             holder.itemView.setOnClickListener {
                 // 상세화면을 호출할 Intent 를 생성한다.
