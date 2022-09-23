@@ -2,7 +2,7 @@ package com.example.mymemoapp
 
 import android.content.Intent
 import android.graphics.Color
-import android.net.Uri.parse
+
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,7 +14,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
-import com.squareup.picasso.Picasso
+
 import kotlinx.android.synthetic.main.activity_detail.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.recycler_item.view.*
@@ -22,10 +22,11 @@ import org.joda.time.DateTime
 import org.joda.time.Days
 import org.joda.time.Hours
 import org.joda.time.Minutes
-import java.net.HttpCookie.parse
+
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 import java.util.*
-import java.util.logging.Level.parse
+import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity() {
@@ -194,23 +195,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     // 글이 쓰여진 시간을 "방금전", " 시간전", "yyyy년 MM월 dd일 HH:mm" 포맷으로 반환해주는 메소드
-    fun getDiffTimeText(targetTime: Long): String {
-        val curDateTime = DateTime()
-        val targetDateTime = DateTime().withMillis(targetTime)
-        val diffDay = Days.daysBetween(curDateTime, targetDateTime).days
-        val diffHours = Hours.hoursBetween(targetDateTime, curDateTime).hours
-        val diffMinutes = Minutes.minutesBetween(targetDateTime, curDateTime).minutes
-        if (diffDay == 0) {
-            if (diffHours == 0 && diffMinutes == 0) {
-                return "방금 전"
+    fun getDiffTimeText(createDateTime: Long): String{
+        val nowDateTime = Calendar.getInstance().timeInMillis //현재 시간 to millisecond
+        var value = ""
+        val differenceValue = nowDateTime - createDateTime //현재 시간 - 비교가 될 시간
+        when {
+            differenceValue < 60000 -> { //59초 보다 적다면
+                value = "방금 전"
             }
-            return if (diffHours > 0) {
-                "" + diffHours + "시간 전"
-            } else "" + diffMinutes + "분 전"
-        } else {
-            val format = SimpleDateFormat("yyyy년 MM월 dd일 HH:mm")
-            return format.format(Date(targetTime))
+            differenceValue < 3600000 -> { //59분 보다 적다면
+                value =  TimeUnit.MILLISECONDS.toMinutes(differenceValue).toString() + "분 전"
+            }
+            differenceValue < 86400000 -> { //23시간 보다 적다면
+                value =  TimeUnit.MILLISECONDS.toHours(differenceValue).toString() + "시간 전"
+            }
+            else -> {
+                val format = SimpleDateFormat("yyyy년 MM월 dd일 HH:mm")
+                return format.format(Date(createDateTime))
+            }
         }
+        return value
     }
-
 }
+

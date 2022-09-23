@@ -61,7 +61,6 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
             app:cardBackgroundColor="@color/memo_001"
-            android:onClick="clickColor"
             app:cardCornerRadius="8dp" />
 
         <androidx.cardview.widget.CardView
@@ -72,7 +71,6 @@
             android:layout_marginLeft="16dp"
             android:layout_toRightOf="@id/color1"
             app:cardBackgroundColor="@color/memo_002"
-            android:onClick="clickColor"
             app:cardCornerRadius="8dp" />
 
         <androidx.cardview.widget.CardView
@@ -83,7 +81,6 @@
             android:layout_marginLeft="16dp"
             android:layout_toRightOf="@id/color2"
             app:cardBackgroundColor="@color/memo_003"
-            android:onClick="clickColor"
             app:cardCornerRadius="8dp" />
 
         <androidx.cardview.widget.CardView
@@ -94,7 +91,6 @@
             android:layout_marginLeft="16dp"
             android:layout_toRightOf="@id/color3"
             app:cardBackgroundColor="@color/memo_004"
-            android:onClick="clickColor"
             app:cardCornerRadius="8dp" />
 
         <androidx.cardview.widget.CardView
@@ -105,7 +101,6 @@
             android:layout_marginLeft="16dp"
             android:layout_toRightOf="@id/color4"
             app:cardBackgroundColor="@color/memo_005"
-            android:onClick="clickColor"
             app:cardCornerRadius="8dp" />
     </RelativeLayout>
 </RelativeLayout>
