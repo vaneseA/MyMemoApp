@@ -9,9 +9,9 @@
         <entry key="app/src/main/res/layout/activity_detail.xml" value="0.165" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.23981481481481481" />
         <entry key="app/src/main/res/layout/activity_memo.xml" value="0.21822916666666667" />
-        <entry key="app/src/main/res/layout/activity_write.xml" value="0.253125" />
+        <entry key="app/src/main/res/layout/activity_write.xml" value="0.19413919413919414" />
         <entry key="app/src/main/res/layout/my_custom_actionbar.xml" value="0.335" />
-        <entry key="app/src/main/res/layout/recycler_item.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/recycler_item.xml" value="0.25" />
         <entry key="app/src/main/res/menu/option_menu.xml" value="0.4036458333333333" />
       </map>
     </option>

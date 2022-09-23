@@ -7,6 +7,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.*
 import com.google.firebase.database.R
 import kotlinx.android.synthetic.main.activity_detail.*
+import kotlinx.android.synthetic.main.activity_detail.input
+import kotlinx.android.synthetic.main.activity_detail.saveButton
+import kotlinx.android.synthetic.main.activity_write.*
 
 class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +32,7 @@ class DetailActivity : AppCompatActivity() {
                     snapshot?.let {
                         val post = it.getValue(Post::class.java)
                         post?.let {
-                            contentsText.text = post.message
+                            input.text = post.message
                         }
                     }
                 }

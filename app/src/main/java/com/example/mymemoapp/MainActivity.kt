@@ -1,14 +1,18 @@
 package com.example.mymemoapp
 
 import android.content.Intent
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
-import android.widget.RelativeLayout
+import android.widget.ImageView
+
 import android.widget.TextView
+
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.activity_detail.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.recycler_item.view.*
 import org.joda.time.DateTime
@@ -133,15 +137,15 @@ class MainActivity : AppCompatActivity() {
 
     // RecyclerView 에서 사용하는 View 홀더 클래스
     inner class MyViewHodler(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        //        // 글의 배경 이미지뷰
-//        val imageView: ImageView = itemView.imageView
+        // 글의 배경 이미지뷰
+//        val imageView: ImageView = itemView.backgrounColorImageView
         // 글의 내용 텍스트뷰
         val contentsText: TextView = itemView.contentsText
 
         // 글쓴 시간 텍스트뷰
         val timeTextView: TextView = itemView.timeTextView
         // 메모지 바탕화면
-//        val containerView: RelativeLayout = itemView.containerView
+//        val layoutBackground: CardView = itemView.layoutBackground
     }
 
     // RecyclerView 의 어댑터 클래스
@@ -172,7 +176,7 @@ class MainActivity : AppCompatActivity() {
             holder.timeTextView.text = getDiffTimeText(post.writeTime as Long)
             // 배경색깔
 //            holder.containerView.setBackgroundColor(post.)
-
+//            holder.layoutBackground.setBackgroundColor(Color.parseColor(post.color))
             // 카드가 클릭되는 경우 DetailActivity 를 실행한다.
             holder.itemView.setOnClickListener {
                 // 상세화면을 호출할 Intent 를 생성한다.
