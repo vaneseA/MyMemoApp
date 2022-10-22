@@ -1,6 +1,7 @@
 package com.example.mymemoapp
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.activity_detail.input
 import kotlinx.android.synthetic.main.activity_detail.saveButton
 import kotlinx.android.synthetic.main.activity_write.*
+import kotlinx.android.synthetic.main.recycler_item.view.*
 
 class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +34,9 @@ class DetailActivity : AppCompatActivity() {
                     snapshot?.let {
                         val post = it.getValue(Post::class.java)
                         post?.let {
-                            input.text = post.message
+                            //post에 입력한 값 불러오기
+                            input.setText(post.message)
+                            input.setBackgroundColor(Color.parseColor(post.color))
                         }
                     }
                 }

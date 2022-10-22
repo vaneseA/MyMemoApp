@@ -151,8 +151,18 @@ class MainActivity : AppCompatActivity() {
         // 글쓴 시간 텍스트뷰
         val timeTextView: TextView = itemView.timeTextView
         // 메모지 바탕화면
-//        val layoutBackground: CardView = itemView.layoutBackground
+
     }
+    interface OnItemClickListener {
+        fun onItemClick(v: View, data: Memo, pos: Int)
+    }
+
+    private var listener: OnItemClickListener? = null
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        this.listener = listener
+    }
+
+
 
     // RecyclerView 의 어댑터 클래스
     inner class MyAdapter : RecyclerView.Adapter<MyViewHodler>() {
@@ -180,11 +190,9 @@ class MainActivity : AppCompatActivity() {
             holder.itemView.timeTextView.text = getDiffTimeText(post.writeTime as Long)
             // 배경색깔
             holder.itemView.backgrounColorImageView.setBackgroundColor(Color.parseColor(post.color))
-
-//            holder.backgrounColorImageView.setBackgroundColor(Color.parseColor(post.color))
             // 카드가 클릭되는 경우 DetailActivity 를 실행한다.
             holder.itemView.setOnClickListener {
-                // 상세화면을 호출할 Intent 를 생성한다.
+//                // 상세화면을 호출할 Intent 를 생성한다.
                 val intent = Intent(this@MainActivity, DetailActivity::class.java)
                 // 선택된 카드의 ID 정보를 intent 에 추가한다.
                 intent.putExtra("postId", post.postId)
