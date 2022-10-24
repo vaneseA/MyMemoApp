@@ -55,7 +55,7 @@
         android:layout_alignParentBottom="true">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/color1"
+            android:id="@+id/colorUpdate1"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_centerVertical="true"
@@ -64,42 +64,42 @@
             app:cardCornerRadius="8dp" />
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/color2"
+            android:id="@+id/colorUpdate2"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@id/color1"
+            android:layout_toRightOf="@id/colorUpdate1"
             app:cardBackgroundColor="@color/memo_002"
             app:cardCornerRadius="8dp" />
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/color3"
+            android:id="@+id/colorUpdate3"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@id/color2"
+            android:layout_toRightOf="@id/colorUpdate2"
             app:cardBackgroundColor="@color/memo_003"
             app:cardCornerRadius="8dp" />
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/color4"
+            android:id="@+id/colorUpdate4"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@id/color3"
+            android:layout_toRightOf="@id/colorUpdate3"
             app:cardBackgroundColor="@color/memo_004"
             app:cardCornerRadius="8dp" />
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/color5"
+            android:id="@+id/colorUpdate5"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@id/color4"
+            android:layout_toRightOf="@id/colorUpdate4"
             app:cardBackgroundColor="@color/memo_005"
             app:cardCornerRadius="8dp" />
     </RelativeLayout>

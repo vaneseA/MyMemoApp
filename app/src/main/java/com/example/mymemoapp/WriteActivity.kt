@@ -1,9 +1,7 @@
 package com.example.mymemoapp
 
-import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
 import android.util.Log
@@ -64,7 +62,7 @@ class WriteActivity : AppCompatActivity() {
                 val memo = Memo(newRef.key.toString(),input.text.toString(), ServerValue.TIMESTAMP, backColor)
                 newRef.setValue(memo)
                     .addOnSuccessListener {
-                        Log.d("SignupActivity", "firebase Database에 저장되었습니다.")
+                        Log.d("WriteActivity", "firebase Database에 저장되었습니다.")
                         Toast.makeText(this, "저장완료", Toast.LENGTH_SHORT).show()
                     }
 
