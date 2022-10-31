@@ -15,7 +15,7 @@
     </style>
 
     <style name="ToolbarTheme_Red">
-        <item name="colorControlNormal">@color/main_001</item>
+        <item name="colorControlNormal">@color/maincolor</item>
     </style>
 
 

@@ -59,8 +59,11 @@ class DetailActivity : AppCompatActivity() {
                         val post = it.getValue(Post::class.java)
                         post?.let {
                             //post에 입력한 값 불러오기
-                            input.setText(post.message)
-                            input.setBackgroundColor(Color.parseColor(post.color))
+                            val currentMessage = input.setText(post.message)
+                            val currentColor =
+                                input.setBackgroundColor(Color.parseColor(post.color))
+                            currentMessage
+                            currentColor
                         }
 
                     }
@@ -69,7 +72,12 @@ class DetailActivity : AppCompatActivity() {
 
         // 하단 댓글쓰기 버튼에 클릭 이벤트 리스너 설정
         saveButton.setOnClickListener {
-            updatePostData(postId.toString(),input.text.toString(),ServerValue.TIMESTAMP, backColor)
+            updatePostData(
+                postId.toString(),
+                input.text.toString(),
+                ServerValue.TIMESTAMP,
+                backColor
+            )
             finish()
         }
 
