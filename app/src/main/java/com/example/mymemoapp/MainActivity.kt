@@ -186,13 +186,12 @@ class MainActivity : AppCompatActivity() {
             holder.itemView.backgrounColorImageView.setBackgroundColor(Color.parseColor(post.color))
             // 카드가 클릭되는 경우 DetailActivity 를 실행한다.
             holder.itemView.setOnClickListener {
-
-
                 // intent 로 상세화면을 시작한다.
                 startActivity(intent)
             }
             holder.itemView.setOnLongClickListener {
-                showDialog(postId)
+                Log.d("TAG",post.postId)
+                showDialog(post.postId)
                 return@setOnLongClickListener (true)
             }
         }
@@ -207,14 +206,14 @@ class MainActivity : AppCompatActivity() {
         val mtAlertDialog = mtBuilder.show()
 
         mtDialogView.yesBtn.setOnClickListener {
-            Firebase.database.getReference("Posts").child(postId).removeValue()
-//            Log.d("Log postId", postId)
-
+            Log.d("Log2", postId)
+            deletePost(postId)
+            Log.d("Log2", postId)
             mtAlertDialog.dismiss()
 
         }
         mtDialogView.noBtn.setOnClickListener {
-            deletePost(postId)
+
             mtAlertDialog.dismiss()
             Toast.makeText(this, "취소되었습니다", Toast.LENGTH_SHORT).show()
         }
@@ -222,6 +221,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun deletePost(postId: String) {
+        Log.d("Log", postId)
         Firebase.database.getReference("Posts").child(postId).removeValue()
         Toast.makeText(this, "삭제되었습니다", Toast.LENGTH_SHORT).show()
     }
