@@ -6,33 +6,31 @@ import android.graphics.Color
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.*
-import android.widget.ImageView
-
-import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
+import com.google.firebase.database.R
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
-import kotlinx.android.synthetic.main.activity_detail.view.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.custom_dialog.view.*
 import kotlinx.android.synthetic.main.recycler_item.view.*
-import org.joda.time.DateTime
-import org.joda.time.Days
-import org.joda.time.Hours
-import org.joda.time.Minutes
-
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var postId: String
+
     // 글 목록을 저장하는 변수
     val posts: MutableList<Post> = mutableListOf()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.example.mymemoapp.R.layout.activity_main)
@@ -75,7 +73,6 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
-
 
 
                 // 글이 변경된 경우
@@ -143,26 +140,16 @@ class MainActivity : AppCompatActivity() {
 
     // RecyclerView 에서 사용하는 View 홀더 클래스
     inner class MyViewHodler(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        // 글의 배경 이미지뷰
-        val backgrounColorImageView: ImageView = itemView.backgrounColorImageView
-        // 글의 내용 텍스트뷰
-        val contentsText: TextView = itemView.contentsText
-
-        // 글쓴 시간 텍스트뷰
-        val timeTextView: TextView = itemView.timeTextView
-        // 메모지 바탕화면
+//        // 글의 배경 이미지뷰
+//        val backgrounColorImageView: ImageView = itemView.backgrounColorImageView
+//        // 글의 내용 텍스트뷰
+//        val contentsText: TextView = itemView.contentsText
+//
+//        // 글쓴 시간 텍스트뷰
+//        val timeTextView: TextView = itemView.timeTextView
+//        // 메모지 바탕화면
 
     }
-    interface OnItemClickListener {
-        fun onItemClick(v: View, data: Memo, pos: Int)
-    }
-
-    private var listener: OnItemClickListener? = null
-    fun setOnItemClickListener(listener: OnItemClickListener) {
-        this.listener = listener
-    }
-
-
 
     // RecyclerView 의 어댑터 클래스
     inner class MyAdapter : RecyclerView.Adapter<MyViewHodler>() {
@@ -184,6 +171,13 @@ class MainActivity : AppCompatActivity() {
         // 각 행의 포지션에서 그려야할 ViewHolder UI 에 데이터를 적용하는 메소드
         override fun onBindViewHolder(holder: MyViewHodler, position: Int) {
             val post = posts[position]
+            //                // 상세화면을 호출할 Intent 를 생성한다.
+            val intent = Intent(this@MainActivity, DetailActivity::class.java)
+            // 선택된 카드의 ID 정보를 intent 에 추가한다.
+            intent.putExtra("postId", post.postId)
+
+            postId = intent.getStringExtra("postId").toString()
+
             // 카드에 글을 세팅
             holder.itemView.contentsText.text = post.message
             // 글이 쓰여진 시간
@@ -192,18 +186,48 @@ class MainActivity : AppCompatActivity() {
             holder.itemView.backgrounColorImageView.setBackgroundColor(Color.parseColor(post.color))
             // 카드가 클릭되는 경우 DetailActivity 를 실행한다.
             holder.itemView.setOnClickListener {
-//                // 상세화면을 호출할 Intent 를 생성한다.
-                val intent = Intent(this@MainActivity, DetailActivity::class.java)
-                // 선택된 카드의 ID 정보를 intent 에 추가한다.
-                intent.putExtra("postId", post.postId)
+
+
                 // intent 로 상세화면을 시작한다.
                 startActivity(intent)
+            }
+            holder.itemView.setOnLongClickListener {
+                showDialog(postId)
+                return@setOnLongClickListener (true)
             }
         }
     }
 
+    private fun showDialog(postId: String) {
+
+        val mtDialogView = LayoutInflater.from(this).inflate(R.layout.custom_dialog, null)
+        val mtBuilder = AlertDialog.Builder(this)
+            .setView(mtDialogView)
+            .setTitle("정말 삭제하시겠습니까?")
+        val mtAlertDialog = mtBuilder.show()
+
+        mtDialogView.yesBtn.setOnClickListener {
+            Firebase.database.getReference("Posts").child(postId).removeValue()
+//            Log.d("Log postId", postId)
+
+            mtAlertDialog.dismiss()
+
+        }
+        mtDialogView.noBtn.setOnClickListener {
+            deletePost(postId)
+            mtAlertDialog.dismiss()
+            Toast.makeText(this, "취소되었습니다", Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+    private fun deletePost(postId: String) {
+        Firebase.database.getReference("Posts").child(postId).removeValue()
+        Toast.makeText(this, "삭제되었습니다", Toast.LENGTH_SHORT).show()
+    }
+
     // 글이 쓰여진 시간을 "방금전", " 시간전", "yyyy년 MM월 dd일 HH:mm" 포맷으로 반환해주는 메소드
-    fun getDiffTimeText(createDateTime: Long): String{
+    fun getDiffTimeText(createDateTime: Long): String {
         val nowDateTime = Calendar.getInstance().timeInMillis //현재 시간 to millisecond
         var value = ""
         val differenceValue = nowDateTime - createDateTime //현재 시간 - 비교가 될 시간
@@ -212,10 +236,10 @@ class MainActivity : AppCompatActivity() {
                 value = "방금 전"
             }
             differenceValue < 3600000 -> { //59분 보다 적다면
-                value =  TimeUnit.MILLISECONDS.toMinutes(differenceValue).toString() + "분 전"
+                value = TimeUnit.MILLISECONDS.toMinutes(differenceValue).toString() + "분 전"
             }
             differenceValue < 86400000 -> { //23시간 보다 적다면
-                value =  TimeUnit.MILLISECONDS.toHours(differenceValue).toString() + "시간 전"
+                value = TimeUnit.MILLISECONDS.toHours(differenceValue).toString() + "시간 전"
             }
             else -> {
                 val format = SimpleDateFormat("yyyy년 MM월 dd일 HH:mm")
@@ -224,5 +248,7 @@ class MainActivity : AppCompatActivity() {
         }
         return value
     }
+
+
 }
 
