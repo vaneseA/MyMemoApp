@@ -6,42 +6,53 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mymemoapp.databinding.ActivityDetailBinding
 import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.activity_detail.*
-import kotlinx.android.synthetic.main.activity_detail.input
-import kotlinx.android.synthetic.main.activity_detail.saveButton
-import kotlinx.android.synthetic.main.activity_write.*
-import kotlinx.android.synthetic.main.recycler_item.view.*
 
 class DetailActivity : AppCompatActivity() {
+
+
+    // (전역변수) 바인딩 객체 선언
+    private var vBinding : ActivityDetailBinding? = null
+
+    // 매번 null 확인 귀찮음 -> 바인딩 변수 재선언
+    private val binding get() = vBinding!!
+
 
     var backColor = "#ffF1EAAD"
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(com.example.mymemoapp.R.layout.activity_detail)
 
+        super.onCreate(savedInstanceState)
+
+        // 자동 생성된 뷰바인딩 클래스에서의 inflate 메서드 활용
+        // -> 액티비티에서 사용할 바인딩 클래스의 인스턴스 생성
+        vBinding = ActivityDetailBinding.inflate(layoutInflater)
+
+        // getRoot 메서드로 레이아웃 내부 최상위에 있는 뷰의 인스턴스 활용
+        // -> 생성된 뷰를 액티비티에 표시
+        setContentView(binding.root)
 
         //배경 색깔 선택 버튼
-        colorUpdate1.setOnClickListener {
+        binding.colorUpdate1.setOnClickListener {
             backColor = "#ffF1EAAD"
-            input.setBackgroundColor(Color.parseColor(backColor))
+            binding.input.setBackgroundColor(Color.parseColor(backColor))
         }
-        colorUpdate2.setOnClickListener {
+        binding.colorUpdate2.setOnClickListener {
             backColor = "#ffE3A8ED"
-            input.setBackgroundColor(Color.parseColor(backColor))
+            binding.input.setBackgroundColor(Color.parseColor(backColor))
         }
-        colorUpdate3.setOnClickListener {
+        binding.colorUpdate3.setOnClickListener {
             backColor = "#ffA9D2F3"
-            input.setBackgroundColor(Color.parseColor(backColor))
+            binding.input.setBackgroundColor(Color.parseColor(backColor))
         }
-        colorUpdate4.setOnClickListener {
+        binding.colorUpdate4.setOnClickListener {
             backColor = "#ffA8EFE9"
-            input.setBackgroundColor(Color.parseColor(backColor))
+            binding.input.setBackgroundColor(Color.parseColor(backColor))
         }
-        colorUpdate5.setOnClickListener {
+        binding.colorUpdate5.setOnClickListener {
             backColor = "#ffF3A6C0"
-            input.setBackgroundColor(Color.parseColor(backColor))
+            binding.input.setBackgroundColor(Color.parseColor(backColor))
         }
         val postId = intent.getStringExtra("postId")
 
@@ -59,9 +70,9 @@ class DetailActivity : AppCompatActivity() {
                         val post = it.getValue(Post::class.java)
                         post?.let {
                             //post에 입력한 값 불러오기
-                            val currentMessage = input.setText(post.message)
+                            val currentMessage = binding.input.setText(post.contens)
                             val currentColor =
-                                input.setBackgroundColor(Color.parseColor(post.color))
+                                binding.input.setBackgroundColor(Color.parseColor(post.color))
                             currentMessage
                             currentColor
                         }
@@ -71,10 +82,10 @@ class DetailActivity : AppCompatActivity() {
             })
 
         // 하단 댓글쓰기 버튼에 클릭 이벤트 리스너 설정
-        saveButton.setOnClickListener {
+        binding.saveButton.setOnClickListener {
             updatePostData(
                 postId.toString(),
-                input.text.toString(),
+                binding.input.text.toString(),
                 ServerValue.TIMESTAMP,
                 backColor
             )
@@ -92,7 +103,7 @@ class DetailActivity : AppCompatActivity() {
     ) {
         val dbRef = FirebaseDatabase.getInstance().getReference("Posts").child(postId)
         val memoInfo =
-            Memo(dbRef.key.toString(), input.text.toString(), ServerValue.TIMESTAMP, backColor)
+            Memo(dbRef.key.toString(), binding.input.text.toString(), ServerValue.TIMESTAMP, backColor)
         dbRef.setValue(memoInfo)
             .addOnSuccessListener {
                 Log.d("DetailActivity", "firebase Database에 저장되었습니다.")

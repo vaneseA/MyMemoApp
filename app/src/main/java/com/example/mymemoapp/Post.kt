@@ -6,7 +6,7 @@ class Post {
         var postId = ""
 
         //글의 메세지
-        var message = ""
+        var contens = ""
 
         //글이 쓰여진 시간
         var writeTime: Any = Any()

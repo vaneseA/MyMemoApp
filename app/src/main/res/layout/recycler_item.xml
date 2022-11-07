@@ -13,7 +13,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/backgrounColorImageView"
+            android:id="@+id/backgroundColorImageArea"
             android:layout_width="0dp"
             android:layout_height="160dp"
             android:scaleType="centerCrop"
@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/contentsText"
+            android:id="@+id/contentsArea"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -51,7 +51,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="#77000000"
-            app:layout_constraintBottom_toBottomOf="@+id/backgrounColorImageView"
+            app:layout_constraintBottom_toBottomOf="@+id/backgroundColorImageArea"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guideline1" />
@@ -69,7 +69,7 @@
             app:srcCompat="@drawable/clock" />
 
         <TextView
-            android:id="@+id/timeTextView"
+            android:id="@+id/timeTextArea"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"

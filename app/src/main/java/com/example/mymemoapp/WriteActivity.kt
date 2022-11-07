@@ -5,16 +5,18 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
 import android.util.Log
-import android.view.View
 import android.widget.Toast
-import com.google.firebase.auth.FirebaseAuth
+import com.example.mymemoapp.databinding.ActivityWriteBinding
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ServerValue
-import kotlinx.android.synthetic.main.activity_write.*
-import kotlinx.android.synthetic.main.recycler_item.*
 
 
 class WriteActivity : AppCompatActivity() {
+    // (전역변수) 바인딩 객체 선언
+    private var vBinding : ActivityWriteBinding? = null
+
+    // 매번 null 확인 귀찮음 -> 바인딩 변수 재선언
+    private val binding get() = vBinding!!
 
     var mode = "post"
     //                 Firebase 의 Posts 참조에서 객체를 저장하기 위한 새로운 카를 생성하고 참조를 newRef 에 저장
@@ -23,7 +25,14 @@ class WriteActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_write)
+
+        // 자동 생성된 뷰바인딩 클래스에서의 inflate 메서드 활용
+        // -> 액티비티에서 사용할 바인딩 클래스의 인스턴스 생성
+        vBinding = ActivityWriteBinding.inflate(layoutInflater)
+
+        // getRoot 메서드로 레이아웃 내부 최상위에 있는 뷰의 인스턴스 활용
+        // -> 생성된 뷰를 액티비티에 표시
+        setContentView(binding.root)
 
         // 전달받은 intent 에서 댓글 모드인지 확인한다.
         intent.getStringExtra("mode")?.let {
@@ -31,35 +40,35 @@ class WriteActivity : AppCompatActivity() {
         }
 
         //배경 색깔 선택 버튼
-        color1.setOnClickListener {
+        binding.color1.setOnClickListener {
             backColor = "#ffF1EAAD"
-            input.setBackgroundColor(Color.parseColor(backColor))
+            binding.input.setBackgroundColor(Color.parseColor(backColor))
         }
-        color2.setOnClickListener {
+        binding.color2.setOnClickListener {
             backColor = "#ffE3A8ED"
-            input.setBackgroundColor(Color.parseColor(backColor))
+            binding.input.setBackgroundColor(Color.parseColor(backColor))
         }
-        color3.setOnClickListener {
+        binding.color3.setOnClickListener {
             backColor = "#ffA9D2F3"
-            input.setBackgroundColor(Color.parseColor(backColor))
+            binding.input.setBackgroundColor(Color.parseColor(backColor))
         }
-        color4.setOnClickListener {
+        binding.color4.setOnClickListener {
             backColor = "#ffA8EFE9"
-            input.setBackgroundColor(Color.parseColor(backColor))
+            binding.input.setBackgroundColor(Color.parseColor(backColor))
         }
-        color5.setOnClickListener {
+        binding.color5.setOnClickListener {
             backColor = "#ffF3A6C0"
-            input.setBackgroundColor(Color.parseColor(backColor))
+            binding.input.setBackgroundColor(Color.parseColor(backColor))
         }
-        saveButton.setOnClickListener {
+        binding.saveButton.setOnClickListener {
             // 메세지가 없는 경우 토스트 메세지로 알림.
-            if (TextUtils.isEmpty(input.text)) {
+            if (TextUtils.isEmpty(binding.input.text)) {
                 Toast.makeText(applicationContext, "메세지를 입력하세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             if (mode == "post") {
 
-                val memo = Memo(newRef.key.toString(),input.text.toString(), ServerValue.TIMESTAMP, backColor)
+                val memo = Memo(newRef.key.toString(),binding.input.text.toString(), ServerValue.TIMESTAMP, backColor)
                 newRef.setValue(memo)
                     .addOnSuccessListener {
                         Log.d("WriteActivity", "firebase Database에 저장되었습니다.")
