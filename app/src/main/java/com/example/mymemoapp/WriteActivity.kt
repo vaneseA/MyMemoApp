@@ -7,6 +7,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
 import com.example.mymemoapp.databinding.ActivityWriteBinding
+import com.example.mymemoapp.main.ContentsModel
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ServerValue
 
@@ -20,7 +21,7 @@ class WriteActivity : AppCompatActivity() {
 
     var mode = "post"
     //                 Firebase 의 Posts 참조에서 객체를 저장하기 위한 새로운 카를 생성하고 참조를 newRef 에 저장
-    val newRef = FirebaseDatabase.getInstance().getReference("Posts").push()
+    val newRef = FirebaseDatabase.getInstance().getReference("memo").push()
     var backColor = "#ffF1EAAD"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,7 +69,7 @@ class WriteActivity : AppCompatActivity() {
             }
             if (mode == "post") {
 
-                val memo = Memo(newRef.key.toString(),binding.input.text.toString(), ServerValue.TIMESTAMP, backColor)
+                val memo = ContentsModel(newRef.key.toString(),binding.input.text.toString(), ServerValue.TIMESTAMP, backColor)
                 newRef.setValue(memo)
                     .addOnSuccessListener {
                         Log.d("WriteActivity", "firebase Database에 저장되었습니다.")

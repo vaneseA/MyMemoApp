@@ -14,8 +14,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mymemoapp.DetailActivity
-import com.example.mymemoapp.Post
+
 import com.example.mymemoapp.R
+import com.example.mymemoapp.utils.FBRef
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import java.text.SimpleDateFormat
@@ -23,7 +24,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
-
+private val TAG = "MainRVAdapter"
 val posts: MutableList<ContentsModel> = mutableListOf()
 
 private lateinit var postId: String
@@ -54,39 +55,42 @@ class MainRVAdapter(
     // 각 아이템에 데이터 넣어줌
     inner class Viewholder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        // 데이터 매핑(아이템, 아이템의 키)
-        fun bindItems(item: ContentsModel,) {
+        // 데이터 매핑(아이템)
+        fun bindItems(item: ContentsModel) {
 
-            val post = items[position]
 
             // 명시적 인텐트 -> 다른 액티비티 호출
             val intent = Intent(context, DetailActivity::class.java)
-            intent.putExtra("postId", post.postId)
+            intent.putExtra("postId", item.postId)
 
             postId = intent.getStringExtra("postId").toString()
 
-            // 각 아이템뷰의 제목/썸네일/북마크(하트) 영역
+            // 각 아이템뷰의 내용/시간/배경색깔 영역
             val contentsTitle = itemView.findViewById<TextView>(R.id.contentsArea)
             val timeTextViewArea = itemView.findViewById<TextView>(R.id.timeTextArea)
             val backgroundColorImageView = itemView.findViewById<ImageView>(R.id.backgroundColorImageArea)
+
+            // 카드에 글을 세팅
+            contentsTitle.text= item.contents
+            // 글이 쓰여진 시간
+            timeTextViewArea.text= getDiffTimeText(item.writeTime as Long)
+            // 배경색깔
+            backgroundColorImageView.setBackgroundColor(Color.parseColor(item.color.toString()))
+
 
             // 리사이클러뷰는 setOnItemClickListener 없음 -> 개발자가 직접 구현해야 함
             // 아이템뷰(아이템 영역)를 클릭하면
             itemView.setOnClickListener {
 
-                // 카드에 글을 세팅
-                contentsTitle.text= post.contents
-                // 글이 쓰여진 시간
-                timeTextViewArea.text= getDiffTimeText(post.writeTime as Long)
-                // 배경색깔
-                backgroundColorImageView.setBackgroundColor(Color.parseColor(post.color.toString()))
                 // 카드가 클릭되는 경우 DetailActivity 를 실행한다.
                 itemView.context.startActivity(intent)
+
+
             }
 
             itemView.setOnLongClickListener {
-                Log.d("TAG", post.postId)
-                showDialog(post.postId)
+                Log.d(TAG, item.postId)
+                showDialog(item.postId)
                 return@setOnLongClickListener (true)
         }
 
@@ -126,7 +130,7 @@ class MainRVAdapter(
     }
 
     private fun deletePost(postId: String) {
-        Firebase.database.getReference("Posts").child(postId).removeValue()
+        FBRef.memoRef.child(postId).removeValue()
         Toast.makeText(context, "삭제되었습니다", Toast.LENGTH_SHORT).show()
     }
     // 글이 쓰여진 시간을 "방금전", " 시간전", "yyyy년 MM월 dd일 HH:mm" 포맷으로 반환해주는 메소드

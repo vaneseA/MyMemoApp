@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mymemoapp.databinding.ActivityDetailBinding
+import com.example.mymemoapp.main.ContentsModel
 import com.google.firebase.database.*
 
 class DetailActivity : AppCompatActivity() {
@@ -67,12 +68,12 @@ class DetailActivity : AppCompatActivity() {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     snapshot?.let {
-                        val post = it.getValue(Post::class.java)
+                        val post = it.getValue(ContentsModel::class.java)
                         post?.let {
                             //post에 입력한 값 불러오기
-                            val currentMessage = binding.input.setText(post.contens)
+                            val currentMessage = binding.input.setText(post.contents)
                             val currentColor =
-                                binding.input.setBackgroundColor(Color.parseColor(post.color))
+                                binding.input.setBackgroundColor(Color.parseColor(post.color.toString()))
                             currentMessage
                             currentColor
                         }
@@ -97,13 +98,13 @@ class DetailActivity : AppCompatActivity() {
 
     private fun updatePostData(
         postId: String,
-        message: String,
+        contens: String,
         writeTime: Any = Any(),
         color: String
     ) {
-        val dbRef = FirebaseDatabase.getInstance().getReference("Posts").child(postId)
+        val dbRef = FirebaseDatabase.getInstance().getReference("memo").child(postId)
         val memoInfo =
-            Memo(dbRef.key.toString(), binding.input.text.toString(), ServerValue.TIMESTAMP, backColor)
+            ContentsModel(dbRef.key.toString(), binding.input.text.toString(), ServerValue.TIMESTAMP, backColor)
         dbRef.setValue(memoInfo)
             .addOnSuccessListener {
                 Log.d("DetailActivity", "firebase Database에 저장되었습니다.")

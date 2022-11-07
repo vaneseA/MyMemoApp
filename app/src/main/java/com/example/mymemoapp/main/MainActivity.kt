@@ -8,14 +8,15 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.recyclerview.widget.LinearLayoutManager
 
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mymemoapp.WriteActivity
 import com.example.mymemoapp.databinding.ActivityMainBinding
+import com.example.mymemoapp.utils.FBRef
 import com.google.firebase.database.*
 
 import java.util.*
-
 
 
 class MainActivity : AppCompatActivity() {
@@ -27,7 +28,7 @@ class MainActivity : AppCompatActivity() {
     private val binding get() = vBinding!!
 
     // 데이터베이스에서 데이터를 읽고 쓰려면 DatabaseReference 인스턴스가 필요
-    lateinit var myRef : DatabaseReference
+    lateinit var myRef: DatabaseReference
 
     // 리사이클러뷰 어댑터 선언
     lateinit var rvAdapter: MainRVAdapter
@@ -60,10 +61,10 @@ class MainActivity : AppCompatActivity() {
                 for (dataModel in dataSnapshot.children) {
                     // 아이템을 받아
                     val item = dataModel.getValue(ContentsModel::class.java)
-
+                    Log.d("asddataModel", dataModel.toString())
                     // 아이템 목록에 넣음
                     items.add(item!!)
-
+                    Log.d("asdditem", item.toString())
                 }
                 // 동기화(새로고침) -> 리스트 크기 및 아이템 변화를 어댑터에 알림
                 rvAdapter.notifyDataSetChanged()
@@ -77,14 +78,16 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
-//
-//        // 파이어베이스 내 데이터의 변화(추가)를 알려줌
-//        myRef.addValueEventListener(postListener)
+
+        // 파이어베이스 내 데이터의 변화(추가)를 알려줌
+        FBRef.memoRef.addValueEventListener(postListener)
 
         // 리사이클러뷰 어댑터 연결
         val rv: RecyclerView = binding.rv
         rv.adapter = rvAdapter
 
+        // RecyclerView 에 LayoutManager 설정
+        rv.layoutManager = LinearLayoutManager(baseContext)
 
         binding.addBtn.setOnClickListener {
             // Intent 생성
@@ -97,17 +100,14 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    // 액티비티 파괴시
+    override fun onDestroy() {
 
-
-
-        // 액티비티 파괴시
-        override fun onDestroy() {
-
-            // 바인딩 클래스 인스턴스 참조를 정리 -> 메모리 효율이 좋아짐
-            vBinding = null
-            super.onDestroy()
-
-        }
+        // 바인딩 클래스 인스턴스 참조를 정리 -> 메모리 효율이 좋아짐
+        vBinding = null
+        super.onDestroy()
 
     }
+
+}
 
