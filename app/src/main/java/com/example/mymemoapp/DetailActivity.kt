@@ -38,23 +38,23 @@ class DetailActivity : AppCompatActivity() {
         //배경 색깔 선택 버튼
         binding.colorUpdate1.setOnClickListener {
             backColor = "#ffF1EAAD"
-            binding.input.setBackgroundColor(Color.parseColor(backColor))
+            binding.contents.setBackgroundColor(Color.parseColor(backColor))
         }
         binding.colorUpdate2.setOnClickListener {
             backColor = "#ffE3A8ED"
-            binding.input.setBackgroundColor(Color.parseColor(backColor))
+            binding.contents.setBackgroundColor(Color.parseColor(backColor))
         }
         binding.colorUpdate3.setOnClickListener {
             backColor = "#ffA9D2F3"
-            binding.input.setBackgroundColor(Color.parseColor(backColor))
+            binding.contents.setBackgroundColor(Color.parseColor(backColor))
         }
         binding.colorUpdate4.setOnClickListener {
             backColor = "#ffA8EFE9"
-            binding.input.setBackgroundColor(Color.parseColor(backColor))
+            binding.contents.setBackgroundColor(Color.parseColor(backColor))
         }
         binding.colorUpdate5.setOnClickListener {
             backColor = "#ffF3A6C0"
-            binding.input.setBackgroundColor(Color.parseColor(backColor))
+            binding.contents.setBackgroundColor(Color.parseColor(backColor))
         }
         val postId = intent.getStringExtra("postId")
 
@@ -72,9 +72,9 @@ class DetailActivity : AppCompatActivity() {
                         val post = it.getValue(ContentsModel::class.java)
                         post?.let {
                             //post에 입력한 값 불러오기
-                            val currentMessage = binding.input.setText(post.contents)
+                            val currentMessage = binding.contents.setText(post.contents)
                             val currentColor =
-                                binding.input.setBackgroundColor(Color.parseColor(post.color.toString()))
+                                binding.contents.setBackgroundColor(Color.parseColor(post.color.toString()))
                             currentMessage
                             currentColor
                         }
@@ -87,7 +87,7 @@ class DetailActivity : AppCompatActivity() {
         binding.saveButton.setOnClickListener {
             updatePostData(
                 postId.toString(),
-                binding.input.text.toString(),
+                binding.contents.text.toString(),
                 ServerValue.TIMESTAMP,
                 backColor
             )
@@ -105,7 +105,7 @@ class DetailActivity : AppCompatActivity() {
     ) {
         val dbRef = FBRef.memoRef.child(postId)
         val memoInfo =
-            ContentsModel(dbRef.key.toString(), binding.input.text.toString(), ServerValue.TIMESTAMP, backColor)
+            ContentsModel(dbRef.key.toString(), binding.contents.text.toString(),  backColor,"")
         dbRef.setValue(memoInfo)
             .addOnSuccessListener {
                 Log.d("DetailActivity", "firebase Database에 저장되었습니다.")

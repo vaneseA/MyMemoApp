@@ -20,7 +20,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-private lateinit var postId: String
+private lateinit var memoId: String
 
 class MainRVAdapter(
     val context: Context, // 컨텍스트
@@ -45,9 +45,9 @@ class MainRVAdapter(
 
         val intent = Intent(context, DetailActivity::class.java)
         // 선택된 카드의 ID 정보를 intent 에 추가한다.
-        intent.putExtra("postId", memo.postId)
+        intent.putExtra("memoId", memo.memoId)
 
-        postId = intent.getStringExtra("postId").toString()
+        memoId = intent.getStringExtra("memoId").toString()
         val contentsText = holder.itemView.findViewById<TextView>(R.id.contentsArea)
         val timeTextView = holder.itemView.findViewById<TextView>(R.id.timeTextArea)
         val backgroundColorImageView =
@@ -56,7 +56,7 @@ class MainRVAdapter(
         // 카드에 글을 세팅
         contentsText.text = memo.contents
         // 글이 쓰여진 시간
-        timeTextView.text = getDiffTimeText(memo.writeTime as Long)
+        timeTextView.text = memo.writeTime
         // 배경색깔
         backgroundColorImageView.setBackgroundColor(Color.parseColor(memo.color.toString()))
 
@@ -65,8 +65,8 @@ class MainRVAdapter(
             holder.itemView.context.startActivity(intent)
         }
         holder.itemView.setOnLongClickListener {
-            Log.d("TAG", memo.postId)
-            showDialog(memo.postId, holder.itemView.context)
+            Log.d("TAG", memo.memoId)
+            showDialog(memo.memoId, holder.itemView.context)
             return@setOnLongClickListener (true)
         }
     }

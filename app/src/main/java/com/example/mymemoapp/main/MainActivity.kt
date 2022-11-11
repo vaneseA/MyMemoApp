@@ -28,6 +28,9 @@ class MainActivity : AppCompatActivity() {
     private val binding get() = vBinding!!
 
 
+    //  키
+    private lateinit var memoId: String
+
     // 리사이클러뷰 어댑터 선언
     lateinit var rvAdapter: MainRVAdapter
 
@@ -50,6 +53,9 @@ class MainActivity : AppCompatActivity() {
 
 
         rvAdapter = MainRVAdapter(baseContext, items)
+
+        // 게시판 프래그먼트에서 게시글의 키 값을 받아옴
+        memoId = intent.getStringExtra("key").toString()
 
 
         // 데이터베이스에서 컨텐츠의 세부정보를 검색

@@ -36,7 +36,7 @@
     </com.google.android.material.appbar.MaterialToolbar>
 
     <EditText
-        android:id="@+id/input"
+        android:id="@+id/contents"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/memo_color"
