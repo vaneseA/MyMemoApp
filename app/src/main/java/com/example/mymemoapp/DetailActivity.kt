@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mymemoapp.databinding.ActivityDetailBinding
 import com.example.mymemoapp.main.ContentsModel
+import com.example.mymemoapp.utils.FBRef
 import com.google.firebase.database.*
 
 class DetailActivity : AppCompatActivity() {
@@ -61,7 +62,7 @@ class DetailActivity : AppCompatActivity() {
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
 
         // 게시글의 ID 로 게시글의 데이터로 다이렉트로 접근한다.
-        FirebaseDatabase.getInstance().getReference("/Posts/$postId")
+        FirebaseDatabase.getInstance().getReference("/memo/$postId")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                 }
@@ -102,7 +103,7 @@ class DetailActivity : AppCompatActivity() {
         writeTime: Any = Any(),
         color: String
     ) {
-        val dbRef = FirebaseDatabase.getInstance().getReference("memo").child(postId)
+        val dbRef = FBRef.memoRef.child(postId)
         val memoInfo =
             ContentsModel(dbRef.key.toString(), binding.input.text.toString(), ServerValue.TIMESTAMP, backColor)
         dbRef.setValue(memoInfo)

@@ -14,12 +14,12 @@ import com.google.firebase.database.ServerValue
 
 class WriteActivity : AppCompatActivity() {
     // (전역변수) 바인딩 객체 선언
-    private var vBinding : ActivityWriteBinding? = null
+    private var vBinding: ActivityWriteBinding? = null
 
     // 매번 null 확인 귀찮음 -> 바인딩 변수 재선언
     private val binding get() = vBinding!!
 
-    var mode = "post"
+
     //                 Firebase 의 Posts 참조에서 객체를 저장하기 위한 새로운 카를 생성하고 참조를 newRef 에 저장
     val newRef = FirebaseDatabase.getInstance().getReference("memo").push()
     var backColor = "#ffF1EAAD"
@@ -35,10 +35,6 @@ class WriteActivity : AppCompatActivity() {
         // -> 생성된 뷰를 액티비티에 표시
         setContentView(binding.root)
 
-        // 전달받은 intent 에서 댓글 모드인지 확인한다.
-        intent.getStringExtra("mode")?.let {
-            mode = intent.getStringExtra("mode").toString()
-        }
 
         //배경 색깔 선택 버튼
         binding.color1.setOnClickListener {
@@ -67,18 +63,22 @@ class WriteActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, "메세지를 입력하세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            if (mode == "post") {
 
-                val memo = ContentsModel(newRef.key.toString(),binding.input.text.toString(), ServerValue.TIMESTAMP, backColor)
-                newRef.setValue(memo)
-                    .addOnSuccessListener {
-                        Log.d("WriteActivity", "firebase Database에 저장되었습니다.")
-                        Toast.makeText(this, "저장완료", Toast.LENGTH_SHORT).show()
-                    }
+            val memo = ContentsModel(
+                newRef.key.toString(),
+                binding.input.text.toString(),
+                ServerValue.TIMESTAMP,
+                backColor
+            )
+            newRef.setValue(memo)
+                .addOnSuccessListener {
+                    Log.d("WriteActivity", "firebase Database에 저장되었습니다.")
+                    Toast.makeText(this, "저장완료", Toast.LENGTH_SHORT).show()
+                }
 
-                finish()
+            finish()
 
-            }
+
         }
     }
 

@@ -27,8 +27,6 @@ class MainActivity : AppCompatActivity() {
     // 매번 null 확인 귀찮음 -> 바인딩 변수 재선언
     private val binding get() = vBinding!!
 
-    // 데이터베이스에서 데이터를 읽고 쓰려면 DatabaseReference 인스턴스가 필요
-    lateinit var myRef: DatabaseReference
 
     // 리사이클러뷰 어댑터 선언
     lateinit var rvAdapter: MainRVAdapter
@@ -41,6 +39,10 @@ class MainActivity : AppCompatActivity() {
         // 자동 생성된 뷰바인딩 클래스에서의 inflate 메서드 활용
         // -> 액티비티에서 사용할 바인딩 클래스의 인스턴스 생성
         vBinding = ActivityMainBinding.inflate(layoutInflater)
+
+
+        // getRoot 메서드로 레이아웃 내부 최상위에 있는 뷰의 인스턴스 활용
+        // -> 생성된 뷰를 액티비티에 표시
         setContentView(binding.root)
 
         // 아이템(postId,message,writeTime,color) 목록
@@ -64,7 +66,7 @@ class MainActivity : AppCompatActivity() {
                     Log.d("asddataModel", dataModel.toString())
                     // 아이템 목록에 넣음
                     items.add(item!!)
-                    Log.d("asdditem", item.toString())
+
                 }
                 // 동기화(새로고침) -> 리스트 크기 및 아이템 변화를 어댑터에 알림
                 rvAdapter.notifyDataSetChanged()
@@ -89,14 +91,13 @@ class MainActivity : AppCompatActivity() {
         // RecyclerView 에 LayoutManager 설정
         rv.layoutManager = LinearLayoutManager(baseContext)
 
+
         binding.addBtn.setOnClickListener {
             // Intent 생성
             val intent = Intent(this@MainActivity, WriteActivity::class.java)
             // Intent 로 WirteActivity 실행
             startActivity(intent)
         }
-
-
     }
 
 
