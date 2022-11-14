@@ -1,5 +1,6 @@
 package com.example.mymemoapp
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -15,13 +16,14 @@ class DetailActivity : AppCompatActivity() {
 
 
     // (전역변수) 바인딩 객체 선언
-    private var vBinding : ActivityDetailBinding? = null
+    private var vBinding: ActivityDetailBinding? = null
+
+    private val TAG = "DetailActivity"
 
     // 매번 null 확인 귀찮음 -> 바인딩 변수 재선언
     private val binding get() = vBinding!!
 
-
-    var backColor = "#ffF1EAAD"
+    private lateinit var backColor: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -35,6 +37,86 @@ class DetailActivity : AppCompatActivity() {
         // -> 생성된 뷰를 액티비티에 표시
         setContentView(binding.root)
 
+
+        val memoId = intent.getStringExtra("memoId")
+        val layoutManager = LinearLayoutManager(this@DetailActivity)
+        layoutManager.orientation = LinearLayoutManager.HORIZONTAL
+
+        // memoId 값을 바탕으로 게시글 하나의 정보를 가져옴
+        getMemoDataForDetail(memoId.toString())
+
+
+        //백그라운드 컬러설정버튼
+        selectUpdateBackColor()
+
+        // 메모 업데이트 버튼
+        binding.saveButton.setOnClickListener {
+            updateMemo(memoId.toString())
+            finish()
+        }
+
+
+    }
+
+    private fun getMemoDataForDetail(memoId: String) {
+
+        // 데이터베이스에서 컨텐츠의 세부정보를 검색
+        val postListener = object : ValueEventListener {
+
+            // 데이터 스냅샷
+            @SuppressLint("NotifyDataSetChanged")
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // 데이터 스냅샷 내 데이터모델 형식으로 저장된 아이템(=메모)
+                val item = dataSnapshot.getValue(ContentsModel::class.java)
+                // 예외 처리
+                try {
+
+                    // 제목, 본문 해당 영역에 넣음(작성자 및 시간은 직접 수정하지 않음)
+                    binding.contents.setText(item?.contents)
+                    binding.contents.setBackgroundColor(Color.parseColor(item?.color.toString()))
+
+                    // 오류 나면
+                } catch (e: Exception) {
+
+                    // 로그
+                    Log.e(TAG, "getMemoDataForDetail 확인")
+
+                }
+
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+                // 로그
+                Log.w(TAG, "loadPost:onCancelled", error.toException())
+            }
+
+        }
+        FBRef.memoRef.child(memoId).addValueEventListener(postListener)
+    }
+
+    private fun updateMemo(memoId: String) {
+        // 메모의 데이터(memoId, 본문, 컬러, 시간)
+        val contents = binding.contents.text.toString()
+        val time = FBRef.getTime()
+        // 키 값 하위에 데이터 넣음
+        FBRef.memoRef
+            .child(memoId)
+            .setValue(ContentsModel(memoId, contents, time, backColor))
+
+        // 등록 확인 메시지 띄움
+        Toast.makeText(this, "수정완료", Toast.LENGTH_SHORT).show()
+
+        // 글쓰기 액티비티 종료
+        finish()
+
+        // 내가 원하는 것 //
+        // 글쓰기 액티비티 종료 -> 방금 쓴 글(글읽기 액티비티)로 이동
+
+    }
+
+    private fun selectUpdateBackColor() {
         //배경 색깔 선택 버튼
         binding.colorUpdate1.setOnClickListener {
             backColor = "#ffF1EAAD"
@@ -56,63 +138,16 @@ class DetailActivity : AppCompatActivity() {
             backColor = "#ffF3A6C0"
             binding.contents.setBackgroundColor(Color.parseColor(backColor))
         }
-        val postId = intent.getStringExtra("postId")
-
-        val layoutManager = LinearLayoutManager(this@DetailActivity)
-        layoutManager.orientation = LinearLayoutManager.HORIZONTAL
-
-        // 게시글의 ID 로 게시글의 데이터로 다이렉트로 접근한다.
-        FirebaseDatabase.getInstance().getReference("/memo/$postId")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onCancelled(error: DatabaseError) {
-                }
-
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    snapshot?.let {
-                        val post = it.getValue(ContentsModel::class.java)
-                        post?.let {
-                            //post에 입력한 값 불러오기
-                            val currentMessage = binding.contents.setText(post.contents)
-                            val currentColor =
-                                binding.contents.setBackgroundColor(Color.parseColor(post.color.toString()))
-                            currentMessage
-                            currentColor
-                        }
-
-                    }
-                }
-            })
-
-        // 하단 댓글쓰기 버튼에 클릭 이벤트 리스너 설정
-        binding.saveButton.setOnClickListener {
-            updatePostData(
-                postId.toString(),
-                binding.contents.text.toString(),
-                ServerValue.TIMESTAMP,
-                backColor
-            )
-            finish()
-        }
-
 
     }
 
-    private fun updatePostData(
-        postId: String,
-        contens: String,
-        writeTime: Any = Any(),
-        color: String
-    ) {
-        val dbRef = FBRef.memoRef.child(postId)
-        val memoInfo =
-            ContentsModel(dbRef.key.toString(), binding.contents.text.toString(),  backColor,"")
-        dbRef.setValue(memoInfo)
-            .addOnSuccessListener {
-                Log.d("DetailActivity", "firebase Database에 저장되었습니다.")
-                Toast.makeText(this, "수정완료", Toast.LENGTH_SHORT).show()
-            }
+    // 액티비티 파괴시
+    override fun onDestroy() {
+
+        // 바인딩 클래스 인스턴스 참조를 정리 -> 메모리 효율이 좋아짐
+        vBinding = null
+        super.onDestroy()
 
     }
-
 
 }

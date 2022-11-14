@@ -3,6 +3,7 @@ package com.example.mymemoapp.main
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Intent
+import android.graphics.Color
 
 
 import androidx.appcompat.app.AppCompatActivity
@@ -21,14 +22,18 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
+    // 아이템(postId,message,writeTime,color) 목록
+    val items = ArrayList<ContentsModel>()
+
     // (전역변수) 바인딩 객체 선언
     private var vBinding: ActivityMainBinding? = null
 
     // 매번 null 확인 귀찮음 -> 바인딩 변수 재선언
     private val binding get() = vBinding!!
 
+    private val TAG = "MainActivity"
 
-    //  키
+    // 메모ID
     private lateinit var memoId: String
 
     // 리사이클러뷰 어댑터 선언
@@ -48,15 +53,33 @@ class MainActivity : AppCompatActivity() {
         // -> 생성된 뷰를 액티비티에 표시
         setContentView(binding.root)
 
-        // 아이템(postId,message,writeTime,color) 목록
-        val items = ArrayList<ContentsModel>()
-
-
         rvAdapter = MainRVAdapter(baseContext, items)
 
         // 게시판 프래그먼트에서 게시글의 키 값을 받아옴
-        memoId = intent.getStringExtra("key").toString()
+        memoId = intent.getStringExtra("memoId").toString()
 
+
+
+        // 리사이클러뷰 어댑터 연결
+        val rv: RecyclerView = binding.rv
+        rv.adapter = rvAdapter
+
+        // RecyclerView 에 LayoutManager 설정
+        rv.layoutManager = LinearLayoutManager(baseContext)
+
+
+        getMemoDataForMain()
+
+
+        binding.addBtn.setOnClickListener {
+            // Intent 생성
+            val intent = Intent(this@MainActivity, WriteActivity::class.java)
+            // Intent 로 WirteActivity 실행
+            startActivity(intent)
+        }
+    }
+
+    private fun getMemoDataForMain() {
 
         // 데이터베이스에서 컨텐츠의 세부정보를 검색
         val postListener = object : ValueEventListener {
@@ -65,14 +88,16 @@ class MainActivity : AppCompatActivity() {
             @SuppressLint("NotifyDataSetChanged")
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
+
                 // 데이터 스냅샷 내 데이터모델 형식으로 저장된
                 for (dataModel in dataSnapshot.children) {
+
                     // 아이템을 받아
                     val item = dataModel.getValue(ContentsModel::class.java)
-                    Log.d("asddataModel", dataModel.toString())
+
                     // 아이템 목록에 넣음
                     items.add(item!!)
-
+                    rvAdapter.notifyItemInserted(items.size - 1)
                 }
                 // 동기화(새로고침) -> 리스트 크기 및 아이템 변화를 어댑터에 알림
                 rvAdapter.notifyDataSetChanged()
@@ -89,23 +114,7 @@ class MainActivity : AppCompatActivity() {
 
         // 파이어베이스 내 데이터의 변화(추가)를 알려줌
         FBRef.memoRef.addValueEventListener(postListener)
-
-        // 리사이클러뷰 어댑터 연결
-        val rv: RecyclerView = binding.rv
-        rv.adapter = rvAdapter
-
-        // RecyclerView 에 LayoutManager 설정
-        rv.layoutManager = LinearLayoutManager(baseContext)
-
-
-        binding.addBtn.setOnClickListener {
-            // Intent 생성
-            val intent = Intent(this@MainActivity, WriteActivity::class.java)
-            // Intent 로 WirteActivity 실행
-            startActivity(intent)
-        }
     }
-
 
     // 액티비티 파괴시
     override fun onDestroy() {

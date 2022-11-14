@@ -36,28 +36,9 @@ class WriteActivity : AppCompatActivity() {
         // memoId 값 기반으로 데이터를 받아오기 위해 키 값 선생성
         memoId = FBRef.memoRef.push().key.toString()
 
+        //백그라운드 컬러설정버튼
+        selectBackColor()
 
-        //배경 색깔 선택 버튼
-        binding.color1.setOnClickListener {
-            backColor = "#ffF1EAAD"
-            binding.contents.setBackgroundColor(Color.parseColor(backColor))
-        }
-        binding.color2.setOnClickListener {
-            backColor = "#ffE3A8ED"
-            binding.contents.setBackgroundColor(Color.parseColor(backColor))
-        }
-        binding.color3.setOnClickListener {
-            backColor = "#ffA9D2F3"
-            binding.contents.setBackgroundColor(Color.parseColor(backColor))
-        }
-        binding.color4.setOnClickListener {
-            backColor = "#ffA8EFE9"
-            binding.contents.setBackgroundColor(Color.parseColor(backColor))
-        }
-        binding.color5.setOnClickListener {
-            backColor = "#ffF3A6C0"
-            binding.contents.setBackgroundColor(Color.parseColor(backColor))
-        }
         binding.saveButton.setOnClickListener {
             // 메세지가 없는 경우 토스트 메세지로 알림.
             if (TextUtils.isEmpty(binding.contents.text)) {
@@ -90,6 +71,32 @@ class WriteActivity : AppCompatActivity() {
 
         // 내가 원하는 것 //
         // 글쓰기 액티비티 종료 -> 방금 쓴 글(글읽기 액티비티)로 이동
+
+    }
+
+    private fun selectBackColor() {
+        //배경 색깔 선택 버튼
+        binding.color1.setOnClickListener {
+            backColor = "#ffF1EAAD"
+            binding.contents.setBackgroundColor(Color.parseColor(backColor))
+        }
+        binding.color2.setOnClickListener {
+            backColor = "#ffE3A8ED"
+            binding.contents.setBackgroundColor(Color.parseColor(backColor))
+        }
+        binding.color3.setOnClickListener {
+            backColor = "#ffA9D2F3"
+            binding.contents.setBackgroundColor(Color.parseColor(backColor))
+        }
+        binding.color4.setOnClickListener {
+            backColor = "#ffA8EFE9"
+            binding.contents.setBackgroundColor(Color.parseColor(backColor))
+        }
+        binding.color5.setOnClickListener {
+            backColor = "#ffF3A6C0"
+            binding.contents.setBackgroundColor(Color.parseColor(backColor))
+        }
+
 
     }
 }
