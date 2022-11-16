@@ -74,7 +74,10 @@ class MainActivity : AppCompatActivity() {
 
         // RecyclerView 에 LayoutManager 설정
         rv.layoutManager = LinearLayoutManager(baseContext)
-
+        // 리사이클러뷰의 아이템을 역순으로 정렬하게 함
+        (rv.layoutManager as LinearLayoutManager).reverseLayout = true
+        // 리사이클려뷰의 아이템을 쌓는 순서를 끝부터 쌓게 함
+        (rv.layoutManager as LinearLayoutManager).stackFromEnd = true
 
     }
 
