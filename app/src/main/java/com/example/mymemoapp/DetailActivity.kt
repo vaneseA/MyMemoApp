@@ -18,10 +18,11 @@ class DetailActivity : AppCompatActivity() {
     // (전역변수) 바인딩 객체 선언
     private var vBinding: ActivityDetailBinding? = null
 
-    private val TAG = "DetailActivity"
-
     // 매번 null 확인 귀찮음 -> 바인딩 변수 재선언
     private val binding get() = vBinding!!
+
+    private val TAG = "DetailActivity"
+
 
     private lateinit var backColor: String
 
@@ -38,12 +39,12 @@ class DetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        val memoId = intent.getStringExtra("memoId")
+        val memoId = intent.getStringExtra("memoId").toString()
         val layoutManager = LinearLayoutManager(this@DetailActivity)
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
 
         // memoId 값을 바탕으로 게시글 하나의 정보를 가져옴
-        getMemoDataForDetail(memoId.toString())
+        getMemoDataForDetail(memoId)
 
 
         //백그라운드 컬러설정버튼
@@ -51,7 +52,7 @@ class DetailActivity : AppCompatActivity() {
 
         // 메모 업데이트 버튼
         binding.saveButton.setOnClickListener {
-            updateMemo(memoId.toString())
+            updateMemo(memoId,backColor)
             finish()
         }
 
@@ -96,24 +97,20 @@ class DetailActivity : AppCompatActivity() {
         FBRef.memoRef.child(memoId).addValueEventListener(postListener)
     }
 
-    private fun updateMemo(memoId: String) {
+    private fun updateMemo(memoId: String, backColor: String) {
         // 메모의 데이터(memoId, 본문, 컬러, 시간)
         val contents = binding.contents.text.toString()
         val time = FBRef.getTime()
         // 키 값 하위에 데이터 넣음
         FBRef.memoRef
             .child(memoId)
-            .setValue(ContentsModel(memoId, contents, time, backColor))
-
-        // 등록 확인 메시지 띄움
-        Toast.makeText(this, "수정완료", Toast.LENGTH_SHORT).show()
+            .setValue(ContentsModel(memoId, contents, time, backColor)).addOnSuccessListener {
+                // 등록 확인 메시지 띄움
+                Toast.makeText(this, "수정완료", Toast.LENGTH_SHORT).show()
+            }
 
         // 글쓰기 액티비티 종료
         finish()
-
-        // 내가 원하는 것 //
-        // 글쓰기 액티비티 종료 -> 방금 쓴 글(글읽기 액티비티)로 이동
-
     }
 
     private fun selectUpdateBackColor() {

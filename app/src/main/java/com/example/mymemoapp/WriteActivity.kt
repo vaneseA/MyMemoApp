@@ -18,7 +18,6 @@ class WriteActivity : AppCompatActivity() {
     // 매번 null 확인 귀찮음 -> 바인딩 변수 재선언
     private val binding get() = vBinding!!
 
-
     //                 Firebase 의 Posts 참조에서 객체를 저장하기 위한 새로운 카를 생성하고 참조를 newRef 에 저장
     private lateinit var memoId: String
     var backColor = "#ffF1EAAD"
@@ -33,6 +32,7 @@ class WriteActivity : AppCompatActivity() {
         // getRoot 메서드로 레이아웃 내부 최상위에 있는 뷰의 인스턴스 활용
         // -> 생성된 뷰를 액티비티에 표시
         setContentView(binding.root)
+
         // memoId 값 기반으로 데이터를 받아오기 위해 키 값 선생성
         memoId = FBRef.memoRef.push().key.toString()
 
@@ -55,7 +55,7 @@ class WriteActivity : AppCompatActivity() {
     private fun setMemo(memoId: String, backColor: String) {
         // 메모의 데이터(memoId, 본문, 컬러, 시간)
         val contents = binding.contents.text.toString()
-        val time = getTime()
+        val time = FBRef.getTime()
 
         // 키 값 하위에 데이터 넣음
         FBRef.memoRef
@@ -99,4 +99,13 @@ class WriteActivity : AppCompatActivity() {
 
 
     }
+    // 액티비티 파괴시
+    override fun onDestroy() {
+
+        // 바인딩 클래스 인스턴스 참조를 정리 -> 메모리 효율이 좋아짐
+        vBinding = null
+        super.onDestroy()
+
+    }
+
 }

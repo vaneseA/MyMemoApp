@@ -3,7 +3,6 @@ package com.example.mymemoapp.main
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Intent
-import android.graphics.Color
 
 
 import androidx.appcompat.app.AppCompatActivity
@@ -23,7 +22,8 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     // 아이템(postId,message,writeTime,color) 목록
-    val items = ArrayList<ContentsModel>()
+    val items: MutableList<ContentsModel> = mutableListOf()
+//    val items = ArrayList<ContentsModel>()
 
     // (전역변수) 바인딩 객체 선언
     private var vBinding: ActivityMainBinding? = null
@@ -48,16 +48,24 @@ class MainActivity : AppCompatActivity() {
         // -> 액티비티에서 사용할 바인딩 클래스의 인스턴스 생성
         vBinding = ActivityMainBinding.inflate(layoutInflater)
 
-
         // getRoot 메서드로 레이아웃 내부 최상위에 있는 뷰의 인스턴스 활용
         // -> 생성된 뷰를 액티비티에 표시
         setContentView(binding.root)
+
+
+        binding.addBtn.setOnClickListener {
+            // Intent 생성
+            val intent = Intent(this@MainActivity, WriteActivity::class.java)
+            // Intent 로 WirteActivity 실행
+            startActivity(intent)
+        }
 
         rvAdapter = MainRVAdapter(baseContext, items)
 
         // 게시판 프래그먼트에서 게시글의 키 값을 받아옴
         memoId = intent.getStringExtra("memoId").toString()
 
+        getMemoDataForMain()
 
 
         // 리사이클러뷰 어댑터 연결
@@ -68,52 +76,94 @@ class MainActivity : AppCompatActivity() {
         rv.layoutManager = LinearLayoutManager(baseContext)
 
 
-        getMemoDataForMain()
-
-
-        binding.addBtn.setOnClickListener {
-            // Intent 생성
-            val intent = Intent(this@MainActivity, WriteActivity::class.java)
-            // Intent 로 WirteActivity 실행
-            startActivity(intent)
-        }
     }
 
     private fun getMemoDataForMain() {
-
-        // 데이터베이스에서 컨텐츠의 세부정보를 검색
-        val postListener = object : ValueEventListener {
-
-            // 데이터 스냅샷
-            @SuppressLint("NotifyDataSetChanged")
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-
-                // 데이터 스냅샷 내 데이터모델 형식으로 저장된
-                for (dataModel in dataSnapshot.children) {
-
-                    // 아이템을 받아
-                    val item = dataModel.getValue(ContentsModel::class.java)
-
-                    // 아이템 목록에 넣음
-                    items.add(item!!)
-                    rvAdapter.notifyItemInserted(items.size - 1)
+        FirebaseDatabase.getInstance().getReference("/memo")
+            .orderByChild("writeTime").addChildEventListener(object : ChildEventListener {
+                // 글이 추가된 경우
+                override fun onChildAdded(snapshot: DataSnapshot, prevChildKey: String?) {
+                    snapshot?.let { snapshot ->
+                        // snapshop 의 데이터를 Post 객체로 가져옴
+                        val memo = snapshot.getValue(ContentsModel::class.java)
+                        memo?.let {
+                            // 새 글이 마지막 부분에 추가된 경우
+                            if (prevChildKey == null) {
+                                //글 목록을 저장하는 변수에 post 객체 추가
+                                items.add(it)
+                                // RecyclerView 의 adapter 에 글이 추가된 것을 알림
+                                rvAdapter?.notifyItemInserted(items.size - 1)
+                            } else {
+                                // 글이 중간에 삽입된 경우 prevChildKey 로 한단계 앞의 데이터의 위치를 찾은 뒤 데이터를 추가한다.
+                                val prevIndex = items.map { it.memoId }.indexOf(prevChildKey)
+                                items.add(prevIndex + 1, memo)
+                                // RecyclerView 의 adapter 에 글이 추가된 것을 알림
+                                rvAdapter?.notifyItemInserted(prevIndex + 1)
+                            }
+                        }
+                    }
                 }
-                // 동기화(새로고침) -> 리스트 크기 및 아이템 변화를 어댑터에 알림
-                rvAdapter.notifyDataSetChanged()
-            }
 
-            // 오류 나면
-            override fun onCancelled(databaseError: DatabaseError) {
 
-                // 로그
-                Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
+                // 글이 변경된 경우
+                override fun onChildChanged(snapshot: DataSnapshot, prevChildKey: String?) {
+                    snapshot?.let { snapshot ->
+                        // snapshop 의 데이터를 Post 객체로 가져옴
+                        val post = snapshot.getValue(ContentsModel::class.java)
+                        post?.let { memo ->
+                            // 글이 변경된 경우 글의 앞의 데이터 인덱스에 데이터를 변경한다.
+                            val prevIndex = items.map { it.memoId }.indexOf(prevChildKey)
+                            items[prevIndex + 1] = post
+                            rvAdapter.notifyItemChanged(prevIndex + 1)
+                        }
+                    }
+                }
 
-            }
-        }
+                override fun onChildRemoved(snapshot: DataSnapshot) {
+                    snapshot?.let {
+                        // snapshot 의 데이터를 Post 객체로 가져옴
+                        val memo = snapshot.getValue(ContentsModel::class.java)
+                        //
+                        memo?.let { memo ->
+                            // 기존에 저장된 인덱스를 찾아서 해당 인덱스의 데이터를 삭제한다.
+                            val existIndex = items.map { it.memoId }.indexOf(memo.memoId)
+                            items.removeAt(existIndex)
+                            rvAdapter?.notifyItemRemoved(existIndex)
+                        }
+                    }
+                }
 
-        // 파이어베이스 내 데이터의 변화(추가)를 알려줌
-        FBRef.memoRef.addValueEventListener(postListener)
+                // 글의 순서가 이동한 경우
+                override fun onChildMoved(snapshot: DataSnapshot, prevChildKey: String?) {
+                    // snapshot
+                    snapshot?.let {
+                        // snapshop 의 데이터를 Post 객체로 가져옴
+                        val memo = snapshot.getValue(ContentsModel::class.java)
+                        memo?.let { memo ->
+                            // 기존의 인덱스를 구한다
+                            val existIndex = items.map { it.memoId }.indexOf(memo.memoId)
+                            // 기존에 데이터를 지운다.
+                            items.removeAt(existIndex)
+                            rvAdapter?.notifyItemRemoved(existIndex)
+                            // prevChildKey 가 없는 경우 맨마지막으로 이동 된 것
+                            if (prevChildKey == null) {
+                                items.add(memo)
+                                rvAdapter?.notifyItemChanged(items.size - 1)
+                            } else {
+                                // prevChildKey 다음 글로 추가
+                                val prevIndex = items.map { it.memoId }.indexOf(prevChildKey)
+                                items.add(prevIndex + 1, memo)
+                                rvAdapter?.notifyItemChanged(prevIndex + 1)
+                            }
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    // 취소가 된경우 에러를 로그로 보여준다
+                    error?.toException()?.printStackTrace()
+                }
+            })
     }
 
     // 액티비티 파괴시
