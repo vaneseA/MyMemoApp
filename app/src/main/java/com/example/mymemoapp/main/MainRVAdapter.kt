@@ -12,12 +12,8 @@ import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mymemoapp.DetailActivity
-
 import com.example.mymemoapp.R
 import com.example.mymemoapp.utils.FBRef
-import java.text.SimpleDateFormat
-import java.util.*
-import java.util.concurrent.TimeUnit
 
 
 private lateinit var memoId: String
@@ -40,8 +36,6 @@ class MainRVAdapter(
     override fun onBindViewHolder(holder: MainRVAdapter.Viewholder, position: Int) {
         val memo = items[position]
 
-        // 껍데기(뷰홀더의 레이아웃)에 출력할 내용물(아이템 목록, 아이템의 키 목록)을 넣어줌
-//        holder.bindItems(items[position])
 
         val intent = Intent(context, DetailActivity::class.java)
         // 선택된 카드의 ID 정보를 intent 에 추가한다.
@@ -77,57 +71,6 @@ class MainRVAdapter(
 
     // 각 아이템에 데이터 넣어줌
     inner class Viewholder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        // 데이터 매핑(아이템)
-//        fun bindItems(item: ContentsModel) {
-//
-//
-//            // 명시적 인텐트 -> 다른 액티비티 호출
-//            val intent = Intent(context, DetailActivity::class.java)
-//            intent.putExtra("postId", item.postId)
-//
-//            postId = intent.getStringExtra("postId").toString()
-//
-//            // 각 아이템뷰의 내용/시간/배경색깔 영역
-//            val contentsTitle = itemView.findViewById<TextView>(R.id.contentsArea)
-//            val timeTextViewArea = itemView.findViewById<TextView>(R.id.timeTextArea)
-//            val backgroundColorImageView = itemView.findViewById<ImageView>(R.id.backgroundColorImageArea)
-//
-//            // 카드에 글을 세팅
-//            contentsTitle.text= items[position].contents
-////            contentsTitle.text= item.contents
-//
-//            // 글이 쓰여진 시간
-//            timeTextViewArea.text= getDiffTimeText(item.writeTime as Long)
-//            // 배경색깔
-//            backgroundColorImageView.setBackgroundColor(Color.parseColor(item.color.toString()))
-//
-
-
-        // 리사이클러뷰는 setOnItemClickListener 없음 -> 개발자가 직접 구현해야 함
-        // 아이템뷰(아이템 영역)를 클릭하면
-//            itemView.setOnClickListener {
-//
-//                // 카드가 클릭되는 경우 DetailActivity 를 실행한다.
-//                itemView.context.startActivity(intent)
-//
-//
-//            }
-
-//            itemView.setOnLongClickListener {
-////                Log.d("dddpostId", item.postId) item.postId잘들어감
-//                val dialogView = LayoutInflater.from(context).inflate(R.layout.custom_dialog, null)
-//
-//
-//                // 대화상자 생성
-//                val builder = AlertDialog.Builder(context)
-//                    .setView(dialogView)
-//                    .setTitle("정말 삭제하시겠습니까?")
-//
-//                // 대화상자 띄움
-//                val alertDialog = builder.show()
-//                return@setOnLongClickListener (true)
-//        }
-
 
     }
 
@@ -171,25 +114,3 @@ private fun deletePost(postId: String, context: Context) {
     Toast.makeText(context, "삭제되었습니다", Toast.LENGTH_SHORT).show()
 }
 
-// 글이 쓰여진 시간을 "방금전", " 시간전", "yyyy년 MM월 dd일 HH:mm" 포맷으로 반환해주는 메소드
-fun getDiffTimeText(createDateTime: Long): String {
-    val nowDateTime = Calendar.getInstance().timeInMillis //현재 시간 to millisecond
-    var value = ""
-    val differenceValue = nowDateTime - createDateTime //현재 시간 - 비교가 될 시간
-    when {
-        differenceValue < 60000 -> { //59초 보다 적다면
-            value = "방금 전"
-        }
-        differenceValue < 3600000 -> { //59분 보다 적다면
-            value = TimeUnit.MILLISECONDS.toMinutes(differenceValue).toString() + "분 전"
-        }
-        differenceValue < 86400000 -> { //23시간 보다 적다면
-            value = TimeUnit.MILLISECONDS.toHours(differenceValue).toString() + "시간 전"
-        }
-        else -> {
-            val format = SimpleDateFormat("yyyy년 MM월 dd일 HH:mm")
-            return format.format(Date(createDateTime))
-        }
-    }
-    return value
-}

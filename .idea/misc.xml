@@ -9,13 +9,13 @@
         <entry key="app/src/main/res/drawable/ic_baseline_clear_24.xml" value="0.265" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1875" />
         <entry key="app/src/main/res/layout/activity_detail.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.16216216216216217" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.5" />
         <entry key="app/src/main/res/layout/activity_memo.xml" value="0.21822916666666667" />
         <entry key="app/src/main/res/layout/activity_write.xml" value="0.19413919413919414" />
         <entry key="app/src/main/res/layout/custom_delite_dialog.xml" value="0.165" />
         <entry key="app/src/main/res/layout/custom_dialog.xml" value="0.33" />
         <entry key="app/src/main/res/layout/my_custom_actionbar.xml" value="0.335" />
-        <entry key="app/src/main/res/layout/recycler_item.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/recycler_item.xml" value="0.2570281124497992" />
         <entry key="app/src/main/res/layout/update_dialog.xml" value="0.1" />
         <entry key="app/src/main/res/menu/option_menu.xml" value="0.4036458333333333" />
       </map>

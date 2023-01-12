@@ -23,7 +23,6 @@
             android:fontFamily="@font/jalnanche"
             android:text="메모장"
             android:textColor="@color/maincolor"
-
             android:textSize="24sp" />
 
         <ImageView
